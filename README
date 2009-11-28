@@ -1,0 +1,10 @@
+Steam Installer
+
+This Python script installs Steam through wine.
+
+Dependencies:
+PyGtk
+wine
+cabextract
+wget
+
