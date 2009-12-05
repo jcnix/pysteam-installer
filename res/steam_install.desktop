@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Version=1.0
+Encoding=UTF-8
+Name=Steam Installer
+Generic Name=Steam Installer
+Comment=Install Steam
+Exec=steam_install.py
+Terminal=false
+MimeType=text/x-python
