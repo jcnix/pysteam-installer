@@ -32,11 +32,15 @@ class MainWindow:
         
         window.set_default_size(450,550)
         
+        progressbar = gtk.ProgressBar(adjustment=None)
+        progressbar.set_orientation(gtk.PROGRESS_LEFT_TO_RIGHT)
+        
         button = gtk.Button("Install")
         button.connect("clicked", self.install);
         
         box1 = gtk.VBox(True,0)
-        box1.pack_start(button)
+        box1.pack_start(progressbar)
+        box1.pack_end(button)
         
         #set the button's size so we can center it better.
         fixed.put(box1, 215, 500)
