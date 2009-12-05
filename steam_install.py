@@ -1,7 +1,9 @@
 #!/usr/bin/env python
 
+import os
 import gtk
 import subprocess
+import urllib2
 
 #TODO: Show the license agreement .rtf file
 #The Steam installer doesn't do this for some reason, but we should.
@@ -11,6 +13,8 @@ import subprocess
 #isn't downloaded until the user clicks Install
 
 class MainWindow:
+    progressbar = gtk.ProgressBar(adjustment=None)
+
     def delete_event(self, widget, event, data=None):
         return False
         
@@ -32,14 +36,13 @@ class MainWindow:
         
         window.set_default_size(450,550)
         
-        progressbar = gtk.ProgressBar(adjustment=None)
-        progressbar.set_orientation(gtk.PROGRESS_LEFT_TO_RIGHT)
+        self.progressbar.set_orientation(gtk.PROGRESS_LEFT_TO_RIGHT)
         
         button = gtk.Button("Install")
         button.connect("clicked", self.install);
         
         box1 = gtk.VBox(True,0)
-        box1.pack_start(progressbar)
+        box1.pack_start(self.progressbar)
         box1.pack_end(button)
         
         #set the button's size so we can center it better.
@@ -48,7 +51,28 @@ class MainWindow:
         window.show_all()
     
     def install(self, widget):
-        subprocess.Popen('./install.sh', shell=True)
+        block_size = 4096
+        
+        steam_url = "http://storefront.steampowered.com/download/SteamInstall.msi"
+        local_file = "SteamInstall.msi"
+        
+        temp = urllib2.urlopen(steam_url);
+        headers = temp.info()
+        size = int(headers['Content-Length'])
+        data = open(local_file, 'wb')
+        
+        i = 0
+        count = 0
+        while i < size:
+            data.write(temp.read(block_size))
+            i += block_size
+            count += 1
+            self.progressbar.set_fraction(i/size)
+        
+        data.close()
+        temp.close()
+        
+        #subprocess.Popen('./install.sh', shell=True)
     
     def main(self):
         gtk.main()
